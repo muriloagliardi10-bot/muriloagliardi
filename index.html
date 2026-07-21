@@ -4,201 +4,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAW STREETWEAR | Official Store</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>CACERES | Streetwear</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
 
-    <div class="topbar">
-        ⚡ FRETE GRÁTIS PARA TODO O BRASIL EM COMPRAS ACIMA DE R$ 299 | CUPOM: RAW10
-    </div>
-
+    <!-- Header / Navbar -->
     <header class="header">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="brand-logo">RAW<span>.</span></a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="catalogo.html">Catálogo</a></li>
-                    <li><a href="sobre.html">Sobre</a></li>
-                    <li><a href="suporte.html">Suporte</a></li>
-                </ul>
-            </nav>
-            <div class="nav-actions">
-                <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="global-search" placeholder="Buscar produtos...">
-                </div>
-                <a href="conta.html" class="icon-btn" title="Minha Conta"><i class="fa-regular fa-user"></i></a>
-                <a href="carrinho.html" class="icon-btn" title="Carrinho">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="badge" id="cart-badge-count">0</span>
-                </a>
-            </div>
+        <div class="logo">
+            <h1>CACERES</h1>
         </div>
+        <nav class="nav">
+            <a href="#catalogo">Coleção</a>
+            <a href="#sobre">Sobre</a>
+            <a href="admin.html" class="admin-link"><i class="fa-solid fa-lock"></i> Admin</a>
+        </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section
-        style="background: linear-gradient(180deg, rgba(0,0,0,0.6), #0a0a0a), url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=80') center/cover; padding: 140px 0; text-align: center;">
-        <div class="container">
-            <p style="color: var(--accent-color); font-weight: 800; letter-spacing: 2px; text-transform: uppercase;">
-                Drop 04 // 2026</p>
-            <h1 style="font-size: 3.5rem; margin: 16px 0 24px; line-height: 1.1;">UNDERGROUND<br>CULTURE & STYLE</h1>
-            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 32px; font-size: 1.1rem;">
-                Modelagens exclusivas, alta gramatura e estéticas urbanas construídas para durar.</p>
-            <a href="catalogo.html" class="btn-primary">Explorar Coleção <i class="fa-solid fa-arrow-right"></i></a>
+    <!-- Banner Principal -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>RAW STREETWEAR</h2>
+            <p>Design minimalista & atitude urbana.</p>
+            <a href="#catalogo" class="btn-hero">Ver Produtos</a>
         </div>
     </section>
 
-    <!-- Vitrine Destaques -->
-    <section style="padding: 80px 0;">
-        <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
-                <div>
-                    <h2 style="font-size: 2rem;">Lançamentos Recentes</h2>
-                    <p style="color: var(--text-muted);">Peças selecionadas do novo Drop</p>
-                </div>
-                <a href="catalogo.html"
-                    style="color: var(--accent-color); font-weight: 700; text-transform: uppercase;">Ver Todos
-                    &rarr;</a>
-            </div>
+    <!-- Seção de Produtos (Catálogo Dinâmico) -->
+    <section id="catalogo" class="container">
+        <h2 class="section-title">Lançamentos</h2>
 
-            <div class="product-grid" id="home-products-grid">
-                <!-- Renderizado dinamicamente via JS -->
-            </div>
+        <div id="grid-produtos" class="grid-produtos">
+            <p class="loading-text">Carregando catálogo...</p>
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <a href="index.html" class="brand-logo">RAW<span>.</span></a>
-                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 12px;">São Paulo - SP | Brasil
-                    </p>
-                </div>
-                <div class="footer-col">
-                    <h4>Navegação</h4>
-                    <ul>
-                        <li><a href="catalogo.html">Catálogo Completo</a></li>
-                        <li><a href="sobre.html">Nossa História</a></li>
-                        <li><a href="suporte.html">Central de Ajuda</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Minha Conta</h4>
-                    <ul>
-                        <li><a href="login.html">Entrar / Cadastrar</a></li>
-                        <li><a href="pedidos.html">Rastrear Pedidos</a></li>
-                        <li><a href="conta.html">Favoritos</a></li>
-                    </ul>
-                </div>
+    <!-- Chat Widget (IA) -->
+    <div class="chat-widget">
+        <div id="chat-box" class="chat-box hidden">
+            <div class="chat-header">
+                <span>Atendimento RAW AI</span>
+                <button id="close-chat">&times;</button>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 RAW STREETWEAR. Todos os direitos reservados.</p>
+            <div id="chat-messages" class="chat-messages">
+                <div class="message bot">Olá! Sou o assistente da CACERES. Como posso te ajudar hoje?</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Pergunte sobre tamanhos, peças...">
+                <button id="send-chat"><i class="fa-solid fa-paper-plane"></i></button>
             </div>
         </div>
-    </footer>
-
-    <!-- Widget Flutuante da IA -->
-    <button class="ai-chat-btn" onclick="toggleAIChat()" title="Atendimento Inteligente RAW">
-        <i class="fa-solid fa-robot"></i>
-    </button>
-
-    <div class="ai-chat-window" id="ai-chat-window">
-        <div class="ai-chat-header">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-bolt" style="color: var(--accent-color);"></i>
-                <strong>Assistente RAW AI</strong>
-            </div>
-            <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="toggleAIChat()"></i>
-        </div>
-
-        <div class="ai-chat-messages" id="ai-messages">
-            <div class="msg msg-bot">
-                ⚡ Olá! Sou a IA da RAW. Como posso te ajudar hoje? (Dúvidas sobre frete, trocas ou sugestões de estilo)
-            </div>
-        </div>
-
-        <div class="ai-chat-input">
-            <input type="text" id="ai-input-text" placeholder="Pergunte algo..."
-                onkeypress="if(event.key==='Enter') sendAIMessage()">
-            <button onclick="sendAIMessage()"><i class="fa-solid fa-paper-plane"></i></button>
-        </div>
+        <button id="toggle-chat" class="chat-btn">
+            <i class="fa-solid fa-comments"></i>
+        </button>
     </div>
 
-    <!-- Scripts -->
-    <script src="database.js"></script>
-    <script src="app.js"></script>
-    <script src="ai-assistant.js"></script>
+    <!-- Script de Integração com a API do Railway -->
     <script>
-        function toggleAIChat() {
-            const win = document.getElementById('ai-chat-window');
-            win.classList.toggle('active');
-        }
+        // URL da sua API hospedada no Railway
+        const API_URL = 'https://luminous-love-production.up.railway.app/api/produtos';
 
-        async function sendAIMessage() {
-            const input = document.getElementById('ai-input-text');
-            const msgContainer = document.getElementById('ai-messages');
-            const text = input.value.trim();
+        // Função para buscar os produtos no Python e desenhar na tela
+        async function carregarProdutos() {
+            const grid = document.getElementById('grid-produtos');
 
-            if (!text) return;
+            try {
+                const response = await fetch(`${API_URL}/api/produtos`);
 
-            // 1. Renderiza mensagem do usuário
-            msgContainer.innerHTML += `<div class="msg msg-user">${text}</div>`;
-            input.value = '';
-            msgContainer.scrollTop = msgContainer.scrollHeight;
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar dados do servidor');
+                }
 
-            // 2. Indicador de "Pensando..."
-            const loadingId = 'loading-' + Date.now();
-            msgContainer.innerHTML += `<div class="msg msg-bot" id="${loadingId}"><i>Pensando...</i></div>`;
-            msgContainer.scrollTop = msgContainer.scrollHeight;
+                const produtos = await response.json();
 
-            // 3. Chama o Python
-            const aiReply = await RAW_AI_ENGINE.sendMessage(text);
+                // Limpa o texto de "Carregando..."
+                grid.innerHTML = '';
 
-            // 4. Exibe a resposta real da IA
-            document.getElementById(loadingId).remove();
-            msgContainer.innerHTML += `<div class="msg msg-bot">${aiReply.replace(/\n/g, '<br>')}</div>`;
-            msgContainer.scrollTop = msgContainer.scrollHeight;
-        }
+                if (produtos.length === 0) {
+                    grid.innerHTML = '<p class="loading-text">Nenhum produto cadastrado no momento.</p>';
+                    return;
+                }
 
-    </script>
+                // Renderiza cada produto vindo da API
+                produtos.forEach(prod => {
+                    const card = document.createElement('div');
+                    card.classList.add('card-produto');
 
-    <script src="database.js"></script>
-    <script src="app.js"></script>
-    <script>
-        // Carrega produtos na vitrine
-        document.addEventListener('DOMContentLoaded', () => {
-            const grid = document.getElementById('home-products-grid');
-            if (grid) {
-                grid.innerHTML = PRODUCTS_DB.slice(0, 4).map(p => `
-          <div class="product-card">
-            <div class="product-thumb">
-              ${p.isNew ? '<span class="product-tag">Novo</span>' : ''}
-              <button class="fav-btn ${AppState.favorites.includes(p.id) ? 'active' : ''}" data-id="${p.id}" onclick="toggleFavorite('${p.id}')">
-                <i class="fa-solid fa-heart"></i>
-              </button>
-              <a href="produto.html?id=${p.id}">
-                <img src="${p.images[0]}" alt="${p.name}">
-              </a>
-            </div>
-            <div class="product-info">
-              <span class="product-category">${p.category}</span>
-              <a href="produto.html?id=${p.id}" class="product-title">${p.name}</a>
-              <div class="product-price">
-                <span class="current-price">${formatCurrency(p.price)}</span>
-                ${p.oldPrice ? `<span class="old-price">${formatCurrency(p.oldPrice)}</span>` : ''}
-              </div>
-            </div>
-          </div>
-        `).join('');
+                    card.innerHTML = `
+                        <div class="card-img">
+                            <img src="${prod.imagem || 'https://via.placeholder.com/300'}" alt="${prod.nome}">
+                        </div>
+                        <div class="card-info">
+                            <h3>${prod.nome}</h3>
+                            <p class="preco">R$ ${parseFloat(prod.preco).toFixed(2).replace('.', ',')}</p>
+                            <button class="btn-comprar">Comprar</button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Erro ao carregar o catálogo:', error);
+                grid.innerHTML = '<p class="loading-text" style="color: #ff4d4d;">Não foi possível carregar os produtos. Verifique se a API no Railway está rodando.</p>';
             }
-        });
+        }
+
+        // Executa a busca assim que a página carregar
+        document.addEventListener('DOMContentLoaded', carregarProdutos);
     </script>
+
+    <!-- Script da IA do Chat -->
+    <script src="raw-ai.js"></script>
 </body>
 
 </html>
