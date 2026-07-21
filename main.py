@@ -1,15 +1,12 @@
-import os
-import json
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
-from google import genai
-from google.genai import types
+from typing import List, Optional
+import os
 
 app = FastAPI()
 
-# Configuração de CORS
+# 1. Configuração do CORS (libera o Firebase para acessar o Railway)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,35 +15,53 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-client = genai.Client()
+# Modelo para os Produtos
+class Produto(BaseModel):
+    id: Optional[int] = None
+    nome: str
+    preco: float
+    imagem: Optional[str] = "https://via.placeholder.com/300"
 
-# --- 1. PRIMEIRO DEFINA AS CLASSES (MODELOS) ---
-class ChatRequest(BaseModel):
-    user_message: str
-    current_page: str
-    current_product: Optional[Dict[str, Any]] = None
-    cart_items: Optional[List[Dict[str, Any]]] = []
-    catalog: List[Dict[str, Any]]
+# Banco de dados temporário em memória (para testes)
+banco_produtos: List[dict] = [
+    {
+        "id": 1,
+        "nome": "Camiseta Caceres Oversized",
+        "preco": 120.00,
+        "imagem": "https://via.placeholder.com/300"
+    },
+    {
+        "id": 2,
+        "nome": "Moletom Caceres Raw",
+        "preco": 249.90,
+        "imagem": "https://via.placeholder.com/300"
+    }
+]
 
-class AdminChatRequest(BaseModel):
-    user_message: str
-    dashboard_data: Dict[str, Any]
+# --- ROTAS DO CATÁLOGO DE PRODUTOS ---
+
+# Rota GET: O index.html chama essa rota para desenhar os produtos na tela
+@app.get("/api/produtos")
+def listar_produtos():
+    return banco_produtos
+
+# Rota POST: O admin.html chama essa rota para cadastrar novos produtos
+@app.post("/api/produtos")
+def criar_produto(produto: Produto):
+    novo_id = len(banco_produtos) + 1
+    novo_prod = produto.dict()
+    novo_prod["id"] = novo_id
+    banco_produtos.append(novo_prod)
+    return {"message": "Produto adicionado com sucesso!", "produto": novo_prod}
+
+# Rota DELETE: O admin.html chama essa rota para apagar um produto
+@app.delete("/api/produtos/{produto_id}")
+def deletar_produto(produto_id: int):
+    global banco_produtos
+    banco_produtos = [p for p in banco_produtos if p.get("id") != produto_id]
+    return {"message": "Produto removido com sucesso!"}
 
 
-# --- 2. DEPOIS DEFINA TODAS AS ROTAS DO SUAS IAs ---
-@app.post("/api/chat")
-async def process_ai_chat(data: ChatRequest):
-    # ... código da rota do cliente ...
-    pass
-
-@app.post("/api/admin/chat")
-async def process_admin_ai_chat(data: AdminChatRequest):
-    # ... código da rota do admin ...
-    pass
-
-
-# --- 3. POR ÚLTIMO (LÁ NO FINALZÃO DO ARQUIVO) O UVICORN ---
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+# --- SUA ROTA DO CHAT (RAW AI) CONTINUA AQUI ---
+# @app.post("/api/chat")
+# ... mantenha seu código da IA/Gemini aqui ...
