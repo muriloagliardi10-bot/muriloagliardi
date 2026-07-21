@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | RAW STREETWEAR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 32px;
+            margin: 40px 0 80px;
+        }
+
+        .admin-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 28px;
+            border-radius: var(--radius-md);
+            height: fit-content;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent-color);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .admin-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .admin-thumb {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .btn-delete {
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        @media (max-width: 900px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Simplificado -->
+    <header class="header">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="brand-logo">RAW<span>.</span> ADMIN</a>
+            <a href="index.html" class="btn-outline" style="padding: 8px 16px; font-size: 0.8rem;">&larr; Ir para a
+                Loja</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="admin-container">
+
+            <!-- FORMULÁRIO DE CADASTRO / EDIÇÃO -->
+            <div class="admin-card">
+                <h3 id="form-title" style="margin-bottom: 20px;">Publicar Novo Produto</h3>
+
+                <form id="product-form" onsubmit="saveProduct(event)">
+                    <input type="hidden" id="prod-id">
+
+                    <div class="form-group">
+                        <label>Nome do Produto</label>
+                        <input type="text" id="prod-name" placeholder="Ex: Camiseta Heavyweight" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div class="form-group">
+                            <label>Preço (R$)</label>
+                            <input type="number" id="prod-price" step="0.01" placeholder="189.90" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <select id="prod-category">
+                                <option value="camisetas">Camisetas</option>
+                                <option value="moletons">Moletons</option>
+                                <option value="calcas">Calças</option>
+                                <option value="corta-vento">Corta-Vento</option>
+                                <option value="acessorios">Acessórios</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>URL da Imagem (Link da Foto)</label>
+                        <input type="url" id="prod-image" placeholder="https://images.unsplash.com/..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descrição Curta</label>
+                        <textarea id="prod-desc" rows="3" placeholder="Detalhes do tecido, corte e modelagem..."
+                            required></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 8px;">
+                        <button type="submit" class="btn-primary" style="flex: 1;" id="btn-submit">Publicar
+                            Produto</button>
+                        <button type="button" class="btn-outline" id="btn-cancel" style="display: none;"
+                            onclick="resetAdminForm()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TABELA DE GERENCIAMENTO DE PRODUTOS -->
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>Catálogo Ativo (<span id="total-products-count">0</span>)</h2>
+                    <button class="btn-outline" onclick="restoreDefaultProducts()"
+                        style="font-size: 0.8rem; padding: 8px 12px;">Restaurar Padrões</button>
+                </div>
+
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-products-table">
+                        <!-- Linhas geradas via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Widget Co-piloto RAW Admin -->
+    <div id="admin-ai-widget" class="admin-ai-box">
+        <div class="admin-ai-header">
+            <span>🤖 RAW Co-Piloto (Admin)</span>
+        </div>
+        <div id="admin-ai-logs" class="admin-ai-logs"></div>
+        <div class="admin-ai-input-zone">
+            <input type="text" id="admin-ai-input" placeholder="Ex: Crie uma descrição para a nova camiseta..."
+                onkeypress="if(event.key === 'Enter') sendAdminQuery()">
+            <button onclick="sendAdminQuery()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendAdminQuery() {
+            const input = document.getElementById('admin-ai-input');
+            const logs = document.getElementById('admin-ai-logs');
+            const query = input.value.trim();
+
+            if (!query) return;
+
+            logs.innerHTML += `<div class="msg-admin user"><b>Você:</b> ${query}</div>`;
+            input.value = '';
+
+            const loadingId = 'load-' + Date.now();
+            logs.innerHTML += `<div class="msg-admin bot" id="${loadingId}"><i>Analisando dados do painel...</i></div>`;
+            logs.scrollTop = logs.scrollHeight;
+
+            const reply = await RAW_ADMIN_AI.askAdminAI(query);
+
+            document.getElementById(loadingId).remove();
+            logs.innerHTML += `<div class="msg-admin bot"><b>Co-Piloto:</b> ${reply.replace(/\n/g, '<br>')}</div>`;
+            logs.scrollTop = logs.scrollHeight;
+        }
+    </script>
+
+    <script src="database.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Carrega ou inicializa a lista de produtos a partir do localStorage
+        function getAdminProducts() {
+            const stored = localStorage.getItem('street_products_db');
+            if (stored) {
+                return JSON.parse(stored);
+            }
+            // Se não existir nada no localStorage, salva a base padrão do database.js
+            localStorage.setItem('street_products_db', JSON.stringify(PRODUCTS_DB));
+            return PRODUCTS_DB;
+        }
+
+        function renderAdminTable() {
+            const products = getAdminProducts();
+            const tbody = document.getElementById('admin-products-table');
+            document.getElementById('total-products-count').textContent = products.length;
+
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Nenhum produto cadastrado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = products.map(p => `
+        <tr>
+          <td><img src="${p.images[0]}" class="admin-thumb" alt="${p.name}"></td>
+          <td><strong>${p.name}</strong></td>
+          <td><span style="text-transform: uppercase; font-size: 0.75rem; color: var(--accent-color);">${p.category}</span></td>
+          <td>${formatCurrency(p.price)}</td>
+          <td>
+            <button class="btn-action btn-edit" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-action btn-delete" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            const products = getAdminProducts();
+
+            const id = document.getElementById('prod-id').value;
+            const name = document.getElementById('prod-name').value;
+            const price = parseFloat(document.getElementById('prod-price').value);
+            const category = document.getElementById('prod-category').value;
+            const image = document.getElementById('prod-image').value;
+            const description = document.getElementById('prod-desc').value;
+
+            if (id) {
+                // EDIÇÃO
+                const index = products.findIndex(p => p.id === id);
+                if (index > -1) {
+                    products[index] = {
+                        ...products[index],
+                        name, price, category, description,
+                        images: [image, ...products[index].images.slice(1)]
+                    };
+                    showToast('Produto atualizado com sucesso!');
+                }
+            } else {
+                // NOVO CADASTRO / PUBLICAÇÃO
+                const newProduct = {
+                    id: 'prod-' + Date.now(),
+                    name, price, category, description,
+                    rating: 5.0,
+                    reviewsCount: 1,
+                    isNew: true,
+                    sizes: ["P", "M", "G", "GG"],
+                    images: [image]
+                };
+                products.unshift(newProduct);
+                showToast('Produto publicado na loja com sucesso!');
+            }
+
+            localStorage.setItem('street_products_db', JSON.stringify(products));
+            resetAdminForm();
+            renderAdminTable();
+        }
+
+        function editProduct(id) {
+            const products = getAdminProducts();
+            const prod = products.find(p => p.id === id);
+            if (!prod) return;
+
+            document.getElementById('prod-id').value = prod.id;
+            document.getElementById('prod-name').value = prod.name;
+            document.getElementById('prod-price').value = prod.price;
+            document.getElementById('prod-category').value = prod.category;
+            document.getElementById('prod-image').value = prod.images[0];
+            document.getElementById('prod-desc').value = prod.description;
+
+            document.getElementById('form-title').textContent = 'Editar Produto';
+            document.getElementById('btn-submit').textContent = 'Salvar Alterações';
+            document.getElementById('btn-cancel').style.display = 'block';
+        }
+
+        function deleteProduct(id) {
+            let products = getAdminProducts();
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('street_products_db', JSON.stringify(products));
+            showToast('Produto removido da loja.', 'error');
+            renderAdminTable();
+        }
+
+        function resetAdminForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('prod-id').value = '';
+            document.getElementById('form-title').textContent = 'Publicar Novo Produto';
+            document.getElementById('btn-submit').textContent = 'Publicar Produto';
+            document.getElementById('btn-cancel').style.display = 'none';
+        }
+
+        function restoreDefaultProducts() {
+            localStorage.setItem('street_products_db', JSON.stringify(PRODUCTS_DB));
+            showToast('Catálogo padrão restaurado!');
+            renderAdminTable();
+        }
+
+        document.addEventListener('DOMContentLoaded', renderAdminTable);
+    </script>
+</body>
+
+</html>
